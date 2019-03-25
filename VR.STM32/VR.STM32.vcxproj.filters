@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{557b9dcd-e90b-4e89-8036-20412e86a5cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controller">
+      <UniqueIdentifier>{847f754e-bd64-4eeb-8235-1e463f115562}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hardware">
+      <UniqueIdentifier>{c4032433-65df-44e2-8173-576c71a8a09c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="VR.STM32.ino" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="__vm\.VR.STM32.vsarduino.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PSP.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Settings.h" />
+    <ClInclude Include="Buffer.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="BuffersController.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Package.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="SdController.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="PSP.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Description.txt" />
+  </ItemGroup>
+</Project>

@@ -24,8 +24,7 @@ void timerInterrupt() {
 	package.millisecond = countTimer * TIME_FACTOR;
 	byte* packEncode = package.Encode();
 	bufferReady = ringBuffer.AddData(packEncode);
-	Serial.write(packEncode, PACKAGE_SIZE);
-	sdController.write(packEncode, PACKAGE_SIZE);
+	Serial.write(packEncode, PACKAGE_SIZE);	
 }
 
 void rtcInterrupt() {
@@ -55,12 +54,12 @@ void setup() {
 }
 
 void loop() {
-	/*if (bufferReady)
+	if (bufferReady)
 	{
 		while (ringBuffer.Count()>0)
 		{
-			sdController.write(ringBuffer.GetData());
+			sdController.write(ringBuffer.GetData(),BUFFER_SIZE);
 		}
 		bufferReady = false;
-	}*/
+	}
 }

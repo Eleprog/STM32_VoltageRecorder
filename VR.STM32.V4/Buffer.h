@@ -14,12 +14,15 @@ public:
 		for (size_t i = 0; i < PACKAGE_SIZE; i++)
 		{
 			arrayByte[position + i] = packageEncode[i];
-		}
+			
+		}		
 		position += PACKAGE_SIZE;
 		if (position >= BUFFER_SIZE) {
 			position = 0;
+
 			return true;
 		}
+		
 		return false;
 	}
 

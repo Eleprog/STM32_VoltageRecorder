@@ -19,16 +19,18 @@ void timerInterrupt() {
 	if (countTimer++ >= TIMER_RESET_COUNTER)
 	{
 		Timer3.pause();
+		package.dateTime = rtc.getTime();
 		countTimer = 0;
 	}
 	package.millisecond = countTimer * TIME_FACTOR;
 	byte* packEncode = package.Encode();
 	bufferReady = ringBuffer.AddData(packEncode);
+
 	Serial.write(packEncode, PACKAGE_SIZE);	
 }
 
 void rtcInterrupt() {
-	package.dateTime = rtc.getTime();
+	
 	Timer3.refresh();
 	Timer3.resume();
 }
@@ -40,7 +42,7 @@ void setup() {
 	Timer3.attachCompare1Interrupt(timerInterrupt);
 
 	rtc.attachSecondsInterrupt(rtcInterrupt);// Call blink 
-
+	rtc.setTime(1554269650);
 	myADC.calibrate();
 	for (unsigned int j = 0; j < CHANNELS_ADC; j++)
 		pinMode(channelsADC[j], INPUT_ANALOG);
@@ -56,9 +58,19 @@ void setup() {
 void loop() {
 	if (bufferReady)
 	{
-		while (ringBuffer.Count()>0)
+		while (ringBuffer.Count() > 0)
 		{
-			sdController.write(ringBuffer.GetData(),BUFFER_SIZE);
+			byte* buf = ringBuffer.GetData();
+		/*	for (size_t i = 0; i < PACKETS_IN_BUFFER; i += PACKAGE_SIZE)
+			{
+				Serial.println(buf[i], 2);
+				Serial.println(buf[i + 1], 2);
+				Serial.println(buf[i + 2], 2);
+				Serial.println(buf[i + 3], 2);
+				Serial.println(buf[i + 23], 2);
+			}
+			Serial.println("-----");*/
+			sdController.write(buf,BUFFER_SIZE);
 		}
 		bufferReady = false;
 	}

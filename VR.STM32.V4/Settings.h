@@ -21,7 +21,7 @@
 #define SD_BUFFER_SIZE 512
 #define PACKETS_IN_BUFFER (SD_BUFFER_SIZE/PACKAGE_SIZE) //количество пакетов в буфере sdкарты
 #define BUFFER_SIZE (PACKETS_IN_BUFFER*PACKAGE_SIZE) //размер буфера
-#define NUMBER_OF_BUFFERS 8 //количество буферов
+#define NUMBER_OF_BUFFERS 16 //количество буферов
 
 byte channelsADC[CHANNELS_ADC] = { PA0,PA1,PA2,PA3,PA4,PA5,PA6,PA7,PB0,PB1 };
 

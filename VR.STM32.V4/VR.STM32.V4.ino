@@ -1,5 +1,6 @@
 
 
+#include "SetupDateTime.h"
 #include <STM32ADC.h>
 #include <RTClock.h>
 #include "Package.h"
@@ -14,6 +15,9 @@ RingBuffer ringBuffer;
 
 bool bufferReady = false;
 
+#define ttd "@ttd%g11#"
+#define tim 12552
+
 int countTimer = 0;
 void timerInterrupt() {
 	if (countTimer++ >= TIMER_RESET_COUNTER)
@@ -26,11 +30,10 @@ void timerInterrupt() {
 	byte* packEncode = package.Encode();
 	bufferReady = ringBuffer.AddData(packEncode);
 
-	Serial.write(packEncode, PACKAGE_SIZE);	
+	Serial.write(packEncode, PACKAGE_SIZE);
 }
 
 void rtcInterrupt() {
-	
 	Timer3.refresh();
 	Timer3.resume();
 }
@@ -42,7 +45,7 @@ void setup() {
 	Timer3.attachCompare1Interrupt(timerInterrupt);
 
 	rtc.attachSecondsInterrupt(rtcInterrupt);// Call blink 
-	rtc.setTime(1554269650);
+	
 	myADC.calibrate();
 	for (unsigned int j = 0; j < CHANNELS_ADC; j++)
 		pinMode(channelsADC[j], INPUT_ANALOG);
@@ -61,17 +64,48 @@ void loop() {
 		while (ringBuffer.Count() > 0)
 		{
 			byte* buf = ringBuffer.GetData();
-		/*	for (size_t i = 0; i < PACKETS_IN_BUFFER; i += PACKAGE_SIZE)
-			{
-				Serial.println(buf[i], 2);
-				Serial.println(buf[i + 1], 2);
-				Serial.println(buf[i + 2], 2);
-				Serial.println(buf[i + 3], 2);
-				Serial.println(buf[i + 23], 2);
-			}
-			Serial.println("-----");*/
-			sdController.write(buf,BUFFER_SIZE);
+			String fileName;
+			fileName += rtc.day();
+			fileName += "_";
+			fileName += rtc.month();
+			fileName += "_";
+			fileName += rtc.year() + 1970;
+			fileName += ".bvr";
+			sdController.write(buf, BUFFER_SIZE, fileName);
 		}
 		bufferReady = false;
 	}
+	if (Serial.available() > 0)
+	{
+		rtc.detachSecondsInterrupt();
+		String s = Serial.readString();
+		String s2 = s.substring(0, 9);
+		String s3 = s.substring(9);
+
+		if (s2 == ttd)
+		{
+			uint32_t synchroneTime = strToUl(s3);
+			uint32_t currTime = rtc.getTime();
+			uint32_t maxTime = 1571356800;
+			if (synchroneTime > currTime - 300 && synchroneTime <= maxTime) {
+				rtc.setTime(synchroneTime);
+			}
+		}
+		rtc.attachSecondsInterrupt(rtcInterrupt);
+	}
+}
+//convert string to uint32_t
+uint32_t strToUl(String string) {
+	uint32_t len = string.length();
+	uint32_t result = 0;
+
+	for (size_t i = 3; i < len; i++)
+	{
+		if ((byte)string[i] >= '0' && (byte)string[i] <= '9') {
+			result = result * 10 + string[i] - '0';
+
+		}
+		else { break; }
+	}
+	return result;
 }

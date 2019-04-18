@@ -45,10 +45,10 @@ class SdControllerClass
 		 }
 		// return true;
 	 }
-	 void write(byte* buffer, uint16_t size) {
-		 String fileName = "xxx";
-		 fileName += ".bvr";	
-		 file = sd2.open(fileName, FILE_WRITE);
+	 void write(byte* buffer, uint16_t size, String& fileName) {
+		 String _fileName = fileName;
+		 //_fileName += ".bvr";	
+		 file = sd2.open(_fileName, FILE_WRITE);
 		 
 		 if (file)
 		 {			 

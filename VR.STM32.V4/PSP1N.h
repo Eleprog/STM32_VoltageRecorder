@@ -213,7 +213,7 @@ public:
 		}
 	}
 private:
-	uint16_t countData = 0;
+	 uint16_t countData = 0;
 };
 
 

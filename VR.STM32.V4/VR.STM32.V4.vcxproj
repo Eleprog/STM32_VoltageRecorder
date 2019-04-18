@@ -118,6 +118,7 @@
     <ClInclude Include="Package.h" />
     <ClInclude Include="SdController.h" />
     <ClInclude Include="Settings.h" />
+    <ClInclude Include="SetupDateTime.h" />
     <ClInclude Include="__vm\.VR.STM32.V4.vsarduino.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

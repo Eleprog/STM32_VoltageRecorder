@@ -117,6 +117,15 @@ public:
 		this->item = dataUnits;
 		this->itemCount = sizeMatrix;
 	}
+
+	PackagePSP() {}
+
+	template <uint16_t sizeMatrix>
+	void init(StartBit startBit, DataUnit(&dataUnits)[sizeMatrix]) {
+		this->startBit = startBit;
+		this->item = dataUnits;
+		this->itemCount = sizeMatrix;
+	}
 private:
 	uint16_t itemCount;
 	StartBit startBit;
@@ -179,17 +188,27 @@ public:
 		packagePSP - put the result of decoding data bytes
 		matrix - intermediate byte array */
 	template <uint16_t sizeMatrix>
-	void decode(int dataByte, PackagePSP &packagePSP, byte(&matrix)[sizeMatrix]) {
-		if (dataByte == -1) return;
+	bool decode(int dataByte, PackagePSP &packagePSP, byte(&matrix)[sizeMatrix]) {
+		if (dataByte == -1) return false;
 		matrix[countData] = dataByte;
+		/*Serial.print("startbit: ");
+		Serial.println(packagePSP.getStartBit());*/
 		if (matrix[countData] & (1 << 7) == packagePSP.getStartBit()) {
+			for (size_t i = 0; i < sizeMatrix; i++)
+			{
+				matrix[i] = 0;
+			}
 			matrix[0] = matrix[countData];
 			countData = 1;
-			return;
+			return false;
 		}
 		countData++;
 		if (countData >= sizeMatrix)
 		{
+			/*for (size_t i = 0; i < 5; i++)
+			{
+				Serial.println(matrix[i], 2);
+			}*/
 			int position = 0;
 			for (size_t i = 0; i < packagePSP.getItemCount(); i++)
 			{
@@ -203,14 +222,17 @@ public:
 					if (freeBits <= 0) freeBits = 1;
 					byte temp = matrix[y] << freeBits;
 					uint32_t temp2 = temp >> (freeBits + x);
-					packagePSP.getItem()[i].value |= temp2 << (packagePSP.getItem()[i].getSize() - size);
+					packagePSP.getItem()[i].value |= temp2 << (packagePSP.getItem()[i].getSize() - size);					
 					byte bit = DATA_BITS - (freeBits - 1) - x;
 					position += bit;
 					size -= bit;
 				}
 			}
+			
 			countData = 0;
+			return true;
 		}
+		return false;
 	}
 private:
 	 uint16_t countData = 0;

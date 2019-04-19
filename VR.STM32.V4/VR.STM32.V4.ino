@@ -12,6 +12,8 @@ STM32ADC myADC(ADC1);
 RTClock rtc(RTCSEL_LSE);
 Package package(ZERO);
 RingBuffer ringBuffer;
+SetupDateTime setupDateTime(StartBit::ZERO);
+
 
 bool bufferReady = false;
 
@@ -45,7 +47,7 @@ void setup() {
 	Timer3.attachCompare1Interrupt(timerInterrupt);
 
 	rtc.attachSecondsInterrupt(rtcInterrupt);// Call blink 
-	
+
 	myADC.calibrate();
 	for (unsigned int j = 0; j < CHANNELS_ADC; j++)
 		pinMode(channelsADC[j], INPUT_ANALOG);
@@ -78,28 +80,68 @@ void loop() {
 	if (Serial.available() > 0)
 	{
 		rtc.detachSecondsInterrupt();
-		String s = Serial.readString();
-		String s2 = s.substring(0, 9);
-		String s3 = s.substring(9);
-
-		if (s2 == ttd)
+		Timer3.detachCompare1Interrupt();
+		//Timer3.pause();
+		//Serial.println("Available");
+		for (size_t i = 0; i < 5; i++)
 		{
-			uint32_t synchroneTime = strToUl(s3);
+			uint32_t synchroneTime = setupDateTime.getDateTime(Serial.read());
 			uint32_t currTime = rtc.getTime();
+			uint32_t currTime2;
 			uint32_t maxTime = 1571356800;
-			if (synchroneTime > currTime - 300 && synchroneTime <= maxTime) {
+			if (currTime>=300)
+			{
+				currTime2 = currTime - 300;
+			}
+			else currTime2 = currTime;
+			//Serial.print("currTime2 ");
+			//Serial.println(currTime2);
+			if (synchroneTime > currTime2  && synchroneTime <= maxTime)
+			//if (synchroneTime > 0)
+			{	
 				rtc.setTime(synchroneTime);
+				Serial.print("dTime: ");
+				Serial.println(rtc.getTime());
+				rtc.attachSecondsInterrupt(rtcInterrupt);// Call blink 
+				Timer3.attachCompare1Interrupt(timerInterrupt);
+				break;
 			}
 		}
-		rtc.attachSecondsInterrupt(rtcInterrupt);
+		//delay(5000);
+		//Timer3.attachCompare1Interrupt(timerInterrupt);
+		//rtc.attachSecondsInterrupt(rtcInterrupt);// Call blink 
+		////Serial.println(Serial.readString());
+		//rtc.detachSecondsInterrupt();
+		//String s = Serial.readString();		;
+		//String s2 = s.substring(0, 9);
+		//String s3 = s.substring(9);
+		////Serial.println(s);
+		////Serial.println(s2);
+		////Serial.println(s3);
+
+		//if (s2 == ttd)
+		//{
+		//	uint32_t synchroneTime = strToUl(s3);
+		//	uint32_t currTime = rtc.getTime();
+		//	uint32_t maxTime = 1571356800;
+		//	Serial.println("TTD");
+		//	if (synchroneTime > currTime-60 && synchroneTime <= maxTime && synchroneTime>0) {
+		//		Serial.println("TIME OK");
+		//		rtc.setTime(synchroneTime);
+		//		Serial.println(rtc.getTime());
+		//	}
+		//}
+		
 	}
+	//Serial.println(rtc.getTime());
+	//delay(1000);
 }
 //convert string to uint32_t
 uint32_t strToUl(String string) {
 	uint32_t len = string.length();
 	uint32_t result = 0;
 
-	for (size_t i = 3; i < len; i++)
+	for (size_t i = 0; i < len; i++)
 	{
 		if ((byte)string[i] >= '0' && (byte)string[i] <= '9') {
 			result = result * 10 + string[i] - '0';

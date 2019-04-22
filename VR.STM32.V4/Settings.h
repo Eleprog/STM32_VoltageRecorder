@@ -23,11 +23,15 @@
 #define BUFFER_SIZE (PACKETS_IN_BUFFER*PACKAGE_SIZE) //размер буфера
 #define NUMBER_OF_BUFFERS 16 //количество буферов
 
-byte channelsADC[CHANNELS_ADC] = { PA0,PA1,PA2,PA3,PA4,PA5,PA6,PA7,PB0,PB1 };
+byte channelsADC[CHANNELS_ADC] = { PA0,PA1,PA2,PA3,PA4,PA5,PA6,PA7,PB0,PB1 }; //каналы АЦП
 
 #define SAMPLING_TIME 2000 //Время дескретизации, мкс
 #define TIMER_RESET_COUNTER ((1000000 / SAMPLING_TIME) - 1) //счетчик сброса таймера
 #define TIME_FACTOR (1000/(1000000 / SAMPLING_TIME)) //поправочный коэффицент миллисекунд
+
+/*  Индикация  */
+#define PIN_ERR_SD PB9
+/***************/
 
 #endif
 

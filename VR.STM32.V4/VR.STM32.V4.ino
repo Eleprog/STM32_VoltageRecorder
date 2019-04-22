@@ -101,37 +101,12 @@ void loop() {
 			{	
 				rtc.setTime(synchroneTime);
 				Serial.print("dTime: ");
-				Serial.println(rtc.getTime());
-				rtc.attachSecondsInterrupt(rtcInterrupt);// Call blink 
-				Timer3.attachCompare1Interrupt(timerInterrupt);
+				Serial.println(rtc.getTime());				
 				break;
 			}
-		}
-		//delay(5000);
-		//Timer3.attachCompare1Interrupt(timerInterrupt);
-		//rtc.attachSecondsInterrupt(rtcInterrupt);// Call blink 
-		////Serial.println(Serial.readString());
-		//rtc.detachSecondsInterrupt();
-		//String s = Serial.readString();		;
-		//String s2 = s.substring(0, 9);
-		//String s3 = s.substring(9);
-		////Serial.println(s);
-		////Serial.println(s2);
-		////Serial.println(s3);
-
-		//if (s2 == ttd)
-		//{
-		//	uint32_t synchroneTime = strToUl(s3);
-		//	uint32_t currTime = rtc.getTime();
-		//	uint32_t maxTime = 1571356800;
-		//	Serial.println("TTD");
-		//	if (synchroneTime > currTime-60 && synchroneTime <= maxTime && synchroneTime>0) {
-		//		Serial.println("TIME OK");
-		//		rtc.setTime(synchroneTime);
-		//		Serial.println(rtc.getTime());
-		//	}
-		//}
-		
+		}	
+		rtc.attachSecondsInterrupt(rtcInterrupt);// Call blink 
+		Timer3.attachCompare1Interrupt(timerInterrupt);
 	}
 	//Serial.println(rtc.getTime());
 	//delay(1000);

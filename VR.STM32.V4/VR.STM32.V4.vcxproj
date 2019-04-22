@@ -114,6 +114,7 @@
   <ItemGroup>
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="PSP1N.h" />
+    <ClInclude Include="PSP1N_V2.h" />
     <ClInclude Include="RingBuffer.h" />
     <ClInclude Include="Package.h" />
     <ClInclude Include="SdController.h" />

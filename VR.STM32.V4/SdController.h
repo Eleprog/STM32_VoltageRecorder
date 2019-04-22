@@ -29,18 +29,23 @@ class SdControllerClass
 {
  protected:
 	 SdFat sd;
-	 File file;
+	 //File file;
 
  public:
+	 SdControllerClass() {
+		 pinMode(PIN_ERR_SD, OUTPUT);
+	 }
 	 void init() {
-
+		 
 		 while (!sd2.begin(SD2_CS, SD_SCK_MHZ(18)))
-		 {			
+		 {		
+			
 			 Serial.println("SD card not init");
-			 digitalWrite(PC13, 0);
+			 digitalWrite(PIN_ERR_SD, 1);
 			 delay(300);
-			 digitalWrite(PC13, 1);
+			 digitalWrite(PIN_ERR_SD, 0);
 			 delay(300);
+			 //nvic_sys_reset();
 			 //return false;
 		 }
 		// return true;
@@ -48,9 +53,9 @@ class SdControllerClass
 	 void write(byte* buffer, uint16_t size, String& fileName) {
 		 String _fileName = fileName;
 		 //_fileName += ".bvr";	
-		 file = sd2.open(_fileName, FILE_WRITE);
+		File file = sd2.open(_fileName, FILE_WRITE);
 		 
-		 if (file)
+		if (file)
 		 {			 
 			 file.write(buffer, size);
 			 //USART0.send(file);
@@ -59,6 +64,7 @@ class SdControllerClass
 		 else
 		 {
 			Serial.println("error opening file");
+			//nvic_sys_reset();			
 			 init();
 		 }
 	 }

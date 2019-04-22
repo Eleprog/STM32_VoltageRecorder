@@ -35,7 +35,7 @@ public:
 	DataPSP1N Encode() {
 		pack.setItemValue(0, dateTime);
 		pack.setItemValue(1, millisecond);
-		for (size_t i = 0; i < PACKAGE_SIZE; i++)
+		for (uint16_t i = 0; i < CHANNELS_ADC; i++)
 		{
 			pack.setItemValue(i + 2, measure[i]);
 		}

@@ -31,6 +31,7 @@ byte channelsADC[CHANNELS_ADC] = { PA0,PA1,PA2,PA3,PA4,PA5,PA6,PA7,PB0,PB1 }; //
 
 /*  Индикация  */
 #define PIN_ERR_SD PB9
+#define PIN_CONTROL_POWER PB7
 /***************/
 
 #endif

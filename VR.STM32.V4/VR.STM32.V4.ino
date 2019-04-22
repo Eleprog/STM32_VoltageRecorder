@@ -42,11 +42,13 @@ void rtcInterrupt() {
 
 void setup() {
 	Serial.begin(250000);
+	pinMode(PIN_CONTROL_POWER, INPUT);
 	Timer3.pause();
 	Timer3.setPeriod(SAMPLING_TIME);
 	Timer3.attachCompare1Interrupt(timerInterrupt);
 
 	rtc.attachSecondsInterrupt(rtcInterrupt);// Call blink 
+	sdController.init();
 
 	myADC.calibrate();
 	for (unsigned int j = 0; j < CHANNELS_ADC; j++)
@@ -63,7 +65,7 @@ void setup() {
 void loop() {
 	if (bufferReady)
 	{
-		while (ringBuffer.Count() > 0)
+		while (ringBuffer.Count() > 0 && digitalRead(PIN_CONTROL_POWER)==HIGH)
 		{
 			byte* buf = ringBuffer.GetData();
 			String fileName;

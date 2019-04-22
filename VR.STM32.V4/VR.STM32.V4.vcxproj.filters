@@ -33,9 +33,6 @@
     <ClInclude Include="RingBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PSP1N.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SdController.h">
       <Filter>Header Files</Filter>
     </ClInclude>

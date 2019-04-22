@@ -10,26 +10,26 @@
 #define _PSP1N_V2_h
 #define DATA_BITS 7 //number of data bits per byte
 //Start bit 
-typedef enum StartBit
+typedef enum StartBitPSP1N
 {
 	ZERO,
 	ONE
-}StartBit;
+}StartBitPSP1N;
 
-typedef enum ResultDecode {
+typedef enum ResultDecodePSP1N {
 	END,
 	DECODE_OK,
 	NOT_DECODE
-}ResultDecode;
+}ResultDecodePSP1N;
 
 //Data unit
-struct StructurePackagePSP
+struct StructurePackagePSP1N
 {
-	StructurePackagePSP(byte size, uint32_t value = 0) {
+	StructurePackagePSP1N(byte size, uint32_t value = 0) {
 		this->size = size;
 		this->value = value;
 	}	
-	friend class PackagePSP;
+	friend class PackagePSP1N;
 private:
 	byte size = 0; //data size in bits
 	uint32_t value = 0;
@@ -44,10 +44,10 @@ private:
 	}
 };
 
-class DataPSP
+class DataPSP1N
 {
 public:
-	DataPSP(byte* data, uint16_t sizeData) {
+	DataPSP1N(byte* data, uint16_t sizeData) {
 		this->data = data;
 		this->sizeData = sizeData;
 	}
@@ -64,7 +64,7 @@ private:
 };
 
 //Data packet
-class PackagePSP
+class PackagePSP1N
 {
 public:
 	//Package data
@@ -82,11 +82,11 @@ public:
 		return itemCount;
 	}
 	//Packet start bit
-	StartBit getStartBit() {
+	StartBitPSP1N getStartBit() {
 		return startBit;
 	}
 
-	DataPSP encode() {
+	DataPSP1N encode() {
 		clearCodedBytes();
 		int positionPush = 0;
 
@@ -124,7 +124,7 @@ public:
 				buffer[0] &= ~(1 << 7);
 			else buffer[0] |= 1 << 7;
 		}
-		DataPSP dataPSP(buffer, sizeCodedBytes);
+		DataPSP1N dataPSP(buffer, sizeCodedBytes);
 		return dataPSP;
 	}
 
@@ -133,13 +133,13 @@ public:
 		packagePSP - put the result of decoding data bytes
 		matrix - intermediate byte array
 		RETURN - result package decode*/
-	ResultDecode decode(int dataByte) {		
-		if (dataByte == -1) return ResultDecode::END;
+	ResultDecodePSP1N decode(int dataByte) {		
+		if (dataByte == -1) return ResultDecodePSP1N::END;
 		buffer[countData] = dataByte;
 		if (buffer[countData] & (1 << 7) == getStartBit()) {
 			buffer[0] = buffer[countData];
 			countData = 1;
-			return ResultDecode::NOT_DECODE;
+			return ResultDecodePSP1N::NOT_DECODE;
 		}
 		countData++;
 		if (countData >= sizeCodedBytes)
@@ -167,21 +167,21 @@ public:
 				}
 			}
 			countData = 0;
-			return ResultDecode::DECODE_OK;
+			return ResultDecodePSP1N::DECODE_OK;
 		}
-		return ResultDecode::NOT_DECODE;
+		return ResultDecodePSP1N::NOT_DECODE;
 	}
 
 	//Constructor
-	PackagePSP() {}
+	PackagePSP1N() {}
 
 	template <uint16_t sizeMatrix, uint16_t sizeCodedBytes>
-	PackagePSP(StartBit startBit, StructurePackagePSP(&dataUnits)[sizeMatrix], byte(&buffer)[sizeCodedBytes]) {
+	PackagePSP1N(StartBitPSP1N startBit, StructurePackagePSP1N(&dataUnits)[sizeMatrix], byte(&buffer)[sizeCodedBytes]) {
 		init(startBit, dataUnits, buffer);
 	}
 
 	template <uint16_t sizeMatrix, uint16_t sizeCodedBytes>
-	void init(StartBit startBit, StructurePackagePSP(&dataUnits)[sizeMatrix], byte(&buffer)[sizeCodedBytes]) {
+	void init(StartBitPSP1N startBit, StructurePackagePSP1N(&dataUnits)[sizeMatrix], byte(&buffer)[sizeCodedBytes]) {
 		this->startBit = startBit;
 		this->item = dataUnits;
 		this->itemCount = sizeMatrix;
@@ -190,8 +190,8 @@ public:
 	}
 private:
 	uint16_t itemCount;
-	StartBit startBit;
-	StructurePackagePSP* item;
+	StartBitPSP1N startBit;
+	StructurePackagePSP1N* item;
 	uint16_t countData = 0;
 	byte* buffer;
 	uint16_t sizeCodedBytes;	

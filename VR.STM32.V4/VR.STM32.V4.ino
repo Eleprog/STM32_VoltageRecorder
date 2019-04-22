@@ -12,7 +12,7 @@ STM32ADC myADC(ADC1);
 RTClock rtc(RTCSEL_LSE);
 Package package(ZERO);
 RingBuffer ringBuffer;
-SetupDateTime setupDateTime(StartBit::ZERO);
+SetupDateTime setupDateTime(StartBitPSP1N::ZERO);
 
 
 bool bufferReady = false;
@@ -29,7 +29,7 @@ void timerInterrupt() {
 		countTimer = 0;
 	}
 	package.millisecond = countTimer * TIME_FACTOR;
-	byte* packEncode = package.Encode();
+	byte* packEncode = package.Encode().getData();
 	bufferReady = ringBuffer.AddData(packEncode);
 
 	Serial.write(packEncode, PACKAGE_SIZE);
@@ -79,32 +79,44 @@ void loop() {
 	}
 	if (Serial.available() > 0)
 	{
+		uint32_t time = 0;
 		rtc.detachSecondsInterrupt();
 		Timer3.detachCompare1Interrupt();
-		//Timer3.pause();
-		//Serial.println("Available");
 		for (size_t i = 0; i < 5; i++)
 		{
-			uint32_t synchroneTime = setupDateTime.getDateTime(Serial.read());
-			uint32_t currTime = rtc.getTime();
-			uint32_t currTime2;
-			uint32_t maxTime = 1571356800;
-			if (currTime>=300)
-			{
-				currTime2 = currTime - 300;
-			}
-			else currTime2 = currTime;
-			//Serial.print("currTime2 ");
-			//Serial.println(currTime2);
-			if (synchroneTime > currTime2  && synchroneTime <= maxTime)
-			//if (synchroneTime > 0)
-			{	
-				rtc.setTime(synchroneTime);
-				Serial.print("dTime: ");
-				Serial.println(rtc.getTime());				
-				break;
-			}
-		}	
+			time = setupDateTime.getDateTime(Serial.read());
+		}
+		if (time>0)
+		{
+			rtc.setTime(time);
+			//delay(100);
+			//Serial.println("FF");
+			//Serial.println(rtc.getTime());
+		}
+		////Timer3.pause();
+		////Serial.println("Available");
+		//for (size_t i = 0; i < 5; i++)
+		//{
+		//	uint32_t synchroneTime = setupDateTime.getDateTime(Serial.read());
+		//	uint32_t currTime = rtc.getTime();
+		//	uint32_t currTime2;
+		//	uint32_t maxTime = 1571356800;
+		//	if (currTime>=300)
+		//	{
+		//		currTime2 = currTime - 300;
+		//	}
+		//	else currTime2 = currTime;
+		//	//Serial.print("currTime2 ");
+		//	//Serial.println(currTime2);
+		//	if (synchroneTime > currTime2  && synchroneTime <= maxTime)
+		//	//if (synchroneTime > 0)
+		//	{	
+		//		rtc.setTime(synchroneTime);
+		//		Serial.print("dTime: ");
+		//		Serial.println(rtc.getTime());				
+		//		break;
+		//	}
+		//}	
 		rtc.attachSecondsInterrupt(rtcInterrupt);// Call blink 
 		Timer3.attachCompare1Interrupt(timerInterrupt);
 	}

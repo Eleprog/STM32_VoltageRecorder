@@ -51,7 +51,7 @@ void setup() {
 
 	rtc.attachSecondsInterrupt(rtcInterrupt);// Call blink 
 	//sdController.init();
-
+	 
 	myADC.calibrate();
 	for (unsigned int j = 0; j < CHANNELS_ADC; j++)
 		pinMode(channelsADC[j], INPUT_ANALOG);

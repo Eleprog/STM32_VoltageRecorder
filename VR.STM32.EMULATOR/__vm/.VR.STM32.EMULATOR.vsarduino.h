@@ -14,14 +14,13 @@
 #define _VSARDUINO_H_
 #define DEBUG_LEVEL DEBUG_NONE
 #define BOARD_generic_stm32f103c
-#define VECT_TAB_ADDR 0x8000000
+#define VECT_TAB_ADDR 0x8002000
 #define ERROR_LED_PORT GPIOC
 #define ERROR_LED_PIN 13
 #define F_CPU 72000000L
 #define ARDUINO 10809
 #define ARDUINO_GENERIC_STM32F103C
 #define ARDUINO_ARCH_STM32F1
-#define CONFIG_MAPLE_MINI_NO_DISABLE_DEBUG 1
 #define SERIAL_USB
 #define GENERIC_BOOTLOADER
 #define MCU_STM32F103C8
@@ -97,6 +96,6 @@ extern "C" void __cxa_pure_virtual() {;}
 #include <board.cpp> 
 #undef cli
 #define cli()
-#include "VR.STM32.V2.ino"
+#include "VR.STM32.EMULATOR.ino"
 #endif
 #endif

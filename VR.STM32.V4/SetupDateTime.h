@@ -3,30 +3,30 @@
 #ifndef _SETUPDATETIME_h
 #define _SETUPDATETIME_h
 
-#include "PSP1N.h"
+#include "Settings.h"
+#include "PSP1N_V2.h"
 
 #define DATETIME_BYTES 5
 
 class SetupDateTime
 {
 protected:
-	StartBit startBit;
-	byte matrix[DATETIME_BYTES];
-	DataUnit du[1] = { (32) };
-	PSP1N psp1n;
-	PackagePSP pack;
+	StructurePackagePSP1N structurePack[1] = { 32 };
+	byte bufferPack[5];
+	PackagePSP1N pack;
 public:
-	SetupDateTime(StartBit startBit) {
-		this->startBit = startBit;
-		pack.init(startBit, du);
+	SetupDateTime(StartBitPSP1N startBit) {
+		pack.init(startBit, structurePack, bufferPack);
+	}
+
+	byte* encode() {
+		return pack.encode().getData();
 	}
 
 	uint32_t getDateTime(int dataByte) {
-		/*Serial.print("Byte: ");
-		Serial.println(dataByte);*/
-		
-		if (psp1n.decode(dataByte, pack, matrix)) {			
-			return pack.getItem()[0].value;
+		if (pack.decode(dataByte)==ResultDecodePSP1N::DECODE_OK)
+		{
+			return pack.getItemValue(0);
 		}
 		return 0;
 	}

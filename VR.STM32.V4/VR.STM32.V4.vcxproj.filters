@@ -33,13 +33,13 @@
     <ClInclude Include="RingBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PSP1N.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SdController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SetupDateTime.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PSP1N_V2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
